@@ -180,3 +180,11 @@ revoke all on function public.is_team_member(uuid) from public, anon;
 grant execute on function public.create_team(text, text) to authenticated;
 grant execute on function public.join_team(text, text) to authenticated;
 grant execute on function public.is_team_member(uuid) to authenticated;
+
+-- Cover foreign keys and the most common team/date queries.
+create index if not exists idx_teams_created_by on public.teams(created_by);
+create index if not exists idx_team_members_user_id on public.team_members(user_id);
+create index if not exists idx_trips_team_date on public.trips(team_id, date);
+create index if not exists idx_riders_team_id on public.riders(team_id);
+create index if not exists idx_riders_trip_team on public.riders(trip_id, team_id);
+create index if not exists idx_availability_team_date on public.availability(team_id, date);
