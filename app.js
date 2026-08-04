@@ -18,6 +18,11 @@
     localStorage.setItem(configKey, JSON.stringify(defaults));
   }
 
+  const style = document.createElement("link");
+  style.rel = "stylesheet";
+  style.href = "ios-overrides.css";
+  document.head.appendChild(style);
+
   const files = ["app-core.js", "app-sync.js", "app-main.js"];
   const load = (src) => new Promise((resolve, reject) => {
     const script = document.createElement("script");
