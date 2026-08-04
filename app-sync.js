@@ -10,9 +10,61 @@
     if(r.status===401&&retry&&session?.refresh_token){ await refreshSession(); return api(path,options,false); }
     if(!r.ok) throw new Error(await r.text()||`Request failed: ${r.status}`); if(r.status===204)return null; const text=await r.text(); return text?JSON.parse(text):null;
   }
-  async function upsert(table,item){ if(!ready())return; try{ await api(`/rest/v1/${table}?on_conflict=id`,{method:"POST",body:JSON.stringify({...item,team_id:state.team.id}),prefer:"resolution=merge-duplicates,return=representation"}); }catch(e){console.error(e);toast("Saved locally; sync failed");} }
+  async function upsert(table,item){
+    if(!ready())return false;
+    try{
+      await api(`/rest/v1/${table}?on_conflict=id`,{method:"POST",body:JSON.stringify({...item,team_id:state.team.id}),prefer:"resolution=merge-duplicates,return=representation"});
+      return true;
+    }catch(e){
+      console.error(e);
+      toast("Saved on this phone; sync will retry");
+      return false;
+    }
+  }
   async function remoteDelete(table,id){ if(!ready())return; try{await api(`/rest/v1/${table}?id=eq.${encodeURIComponent(id)}&team_id=eq.${state.team.id}`,{method:"DELETE"});}catch(e){console.error(e);} }
-  async function loadRemote(){ if(!ready())return; try{const [trips,riders,availability,members]=await Promise.all([api(`/rest/v1/trips?team_id=eq.${state.team.id}&select=*&order=date.asc`),api(`/rest/v1/riders?team_id=eq.${state.team.id}&select=*`),api(`/rest/v1/availability?team_id=eq.${state.team.id}&select=*&order=date.asc`),api(`/rest/v1/team_members?team_id=eq.${state.team.id}&select=display_name`)]); state.trips=trips||[];state.riders=riders||[];state.availability=availability||[];const names=(members||[]).map(x=>x.display_name).filter(Boolean);if(names.length)state.roster=[...new Set(names)].sort();save();}catch(e){console.error(e);toast("Could not refresh shared board");} }
+
+  function mergeRemoteWithLocal(remoteRows, localRows){
+    const remote = Array.isArray(remoteRows) ? remoteRows : [];
+    const local = Array.isArray(localRows) ? localRows : [];
+    const merged = new Map(remote.map(row => [row.id, row]));
+    for(const row of local){
+      if(row?.id && !merged.has(row.id)) merged.set(row.id, row);
+    }
+    return [...merged.values()];
+  }
+
+  async function retryUnsynced(table, localRows, remoteRows){
+    const remoteIds = new Set((Array.isArray(remoteRows) ? remoteRows : []).map(row => row.id));
+    const unsynced = (Array.isArray(localRows) ? localRows : []).filter(row => row?.id && !remoteIds.has(row.id));
+    for(const row of unsynced) await upsert(table,row);
+  }
+
+  async function loadRemote(){
+    if(!ready())return;
+    try{
+      const localTrips=[...state.trips], localRiders=[...state.riders], localAvailability=[...state.availability];
+      const [trips,riders,availability,members]=await Promise.all([
+        api(`/rest/v1/trips?team_id=eq.${state.team.id}&select=*&order=date.asc`),
+        api(`/rest/v1/riders?team_id=eq.${state.team.id}&select=*`),
+        api(`/rest/v1/availability?team_id=eq.${state.team.id}&select=*&order=date.asc`),
+        api(`/rest/v1/team_members?team_id=eq.${state.team.id}&select=display_name`)
+      ]);
+
+      state.trips=mergeRemoteWithLocal(trips,localTrips);
+      state.riders=mergeRemoteWithLocal(riders,localRiders);
+      state.availability=mergeRemoteWithLocal(availability,localAvailability);
+      const names=(members||[]).map(x=>x.display_name).filter(Boolean);
+      if(names.length)state.roster=[...new Set([...state.roster,...names])].sort();
+      save();
+
+      await retryUnsynced("trips",localTrips,trips);
+      await retryUnsynced("riders",localRiders,riders);
+      await retryUnsynced("availability",localAvailability,availability);
+    }catch(e){
+      console.error(e);
+      toast("Offline copy preserved; sync will retry");
+    }
+  }
   async function resolveTeam(){ if(!session?.access_token)return; try{const m=await api("/rest/v1/team_members?select=team_id,display_name,teams(id,name,join_code)&limit=1");if(m?.length){state.team=m[0].teams||{id:m[0].team_id,name:"Team"};if(m[0].display_name&&!state.roster.includes(m[0].display_name))state.roster.push(m[0].display_name);save();await loadRemote();}}catch(e){console.error(e);} }
 
   const validEmail = value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
