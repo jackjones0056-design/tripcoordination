@@ -14,6 +14,29 @@
   $("clearLocalData").onclick=()=>{if(confirm("Clear all local data?")){state=empty();save();toast("Local data cleared")}};
   addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e;$("installBtn").classList.remove("hidden")}); $("installBtn").onclick=async()=>{if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;$("installBtn").classList.add("hidden")}};
   addEventListener("online",()=>ready()?loadRemote():renderSettings()); addEventListener("offline",renderSettings);
-  if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js"));
+
+  if("serviceWorker" in navigator){
+    let reloading=false;
+    navigator.serviceWorker.addEventListener("controllerchange",()=>{
+      if(reloading)return;
+      reloading=true;
+      location.reload();
+    });
+    addEventListener("load",async()=>{
+      try{
+        const registration=await navigator.serviceWorker.register("./service-worker.js?v=ios-20260804-3",{updateViaCache:"none"});
+        await registration.update();
+        if(registration.waiting)registration.waiting.postMessage({type:"SKIP_WAITING"});
+        registration.addEventListener("updatefound",()=>{
+          const worker=registration.installing;
+          if(!worker)return;
+          worker.addEventListener("statechange",()=>{
+            if(worker.state==="installed"&&navigator.serviceWorker.controller)worker.postMessage({type:"SKIP_WAITING"});
+          });
+        });
+      }catch(error){console.error("Service worker update failed",error);}
+    });
+  }
+
   const capturedSession=captureEmailSession(); if(capturedSession||session?.access_token)fetchUser().then(resolveTeam); setInterval(()=>{if(document.visibilityState==="visible"&&ready()&&navigator.onLine)loadRemote()},30000);
   resetTrip(); $("availabilityDate").value=today(); render();
