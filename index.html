@@ -34,11 +34,19 @@
       </div>
 
       <div class="filters card compact">
-        <label>Date<input id="filterDate" type="date" /></label>
-        <label>Status
+        <label>
+          Date
+          <input id="filterDate" type="date" />
+        </label>
+        <label>
+          Status
           <select id="filterStatus">
-            <option value="">All</option><option>Planned</option><option>Confirmed</option>
-            <option>En Route</option><option>Complete</option><option>Canceled</option>
+            <option value="">All</option>
+            <option>Planned</option>
+            <option>Confirmed</option>
+            <option>En Route</option>
+            <option>Complete</option>
+            <option>Canceled</option>
           </select>
         </label>
         <button id="clearFilters" class="button ghost">Clear</button>
@@ -53,89 +61,177 @@
     </section>
 
     <section id="view-trip" class="view" aria-labelledby="tripTitle">
-      <div class="section-heading"><div><p class="eyebrow">PLAN MOVEMENT</p><h2 id="tripTitle">New trip</h2></div></div>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">PLAN MOVEMENT</p>
+          <h2 id="tripTitle">New trip</h2>
+        </div>
+      </div>
+
       <form id="tripForm" class="card form-grid">
         <input id="tripId" type="hidden" />
         <label>Date<input id="tripDate" type="date" required /></label>
-        <label>Window<select id="tripWindow" required><option value="">Select</option><option>AM Drop</option><option>PM Pickup</option><option>Full Day</option><option>Hotel Drop</option></select></label>
-        <label>MEPS location<select id="tripMeps" required><option value="">Select</option><option>New Orleans MEPS</option><option>Jackson MEPS</option><option>Other</option></select></label>
+        <label>Window
+          <select id="tripWindow" required>
+            <option value="">Select</option>
+            <option>AM Drop</option>
+            <option>PM Pickup</option>
+            <option>Full Day</option>
+            <option>Hotel Drop</option>
+          </select>
+        </label>
+        <label>MEPS location
+          <select id="tripMeps" required>
+            <option value="">Select</option>
+            <option>New Orleans MEPS</option>
+            <option>Jackson MEPS</option>
+            <option>Other</option>
+          </select>
+        </label>
         <label>Pickup area<input id="tripPickup" placeholder="Biloxi / D'Iberville" required /></label>
         <label>Departure<input id="tripDeparture" type="time" /></label>
         <label>Return ETA<input id="tripReturn" type="time" /></label>
-        <label>Primary coordinator<input id="tripPrimary" list="rosterOptions" placeholder="Select or type a name" required /></label>
-        <label>Backup coordinator<input id="tripBackup" list="rosterOptions" placeholder="Select or type a name" /></label>
+        <label>Primary coordinator
+          <input id="tripPrimary" list="rosterOptions" placeholder="Select or type a name" required />
+        </label>
+        <label>Backup coordinator
+          <input id="tripBackup" list="rosterOptions" placeholder="Select or type a name" />
+        </label>
         <datalist id="rosterOptions"></datalist>
         <label>Vehicle<input id="tripVehicle" placeholder="GOV 1" /></label>
         <label>Seat capacity<input id="tripSeats" type="number" min="1" max="20" inputmode="numeric" value="7" required /></label>
-        <label>Status<select id="tripStatus"><option>Planned</option><option>Confirmed</option><option>En Route</option><option>Complete</option><option>Canceled</option></select></label>
+        <label>Status
+          <select id="tripStatus">
+            <option>Planned</option>
+            <option>Confirmed</option>
+            <option>En Route</option>
+            <option>Complete</option>
+            <option>Canceled</option>
+          </select>
+        </label>
         <label class="span-2">Notes<textarea id="tripNotes" rows="3" placeholder="Hotel, special pickup coordination, etc."></textarea></label>
-        <div class="form-actions span-2"><button type="button" class="button ghost" data-nav="board">Cancel</button><button type="submit" class="button">Save trip</button></div>
+        <div class="form-actions span-2">
+          <button type="button" class="button ghost" data-nav="board">Cancel</button>
+          <button type="submit" class="button">Save trip</button>
+        </div>
       </form>
     </section>
 
     <section id="view-riders" class="view" aria-labelledby="ridersTitle">
-      <div class="section-heading"><div><p class="eyebrow">SEAT MANAGEMENT</p><h2 id="ridersTitle">Riders</h2></div><button id="newRiderBtn" class="button">+ Rider</button></div>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">SEAT MANAGEMENT</p>
+          <h2 id="ridersTitle">Riders</h2>
+        </div>
+        <button id="newRiderBtn" class="button">+ Rider</button>
+      </div>
+
       <form id="riderForm" class="card form-grid hidden">
         <input id="riderId" type="hidden" />
-        <label class="span-2">Trip<select id="riderTrip" required></select></label>
+        <label class="span-2">Trip
+          <select id="riderTrip" required></select>
+        </label>
         <label>Applicant ID / initials<input id="riderRef" required placeholder="AB-01" /></label>
         <label>Recruiter<input id="riderRecruiter" required /></label>
         <label>Pickup location<input id="riderPickup" /></label>
-        <label>Appointment<select id="riderAppointment"><option>Physical</option><option>ASVAB</option><option>Processing</option><option>Consult</option><option>Return</option><option>Other</option></select></label>
-        <label>Hotel needed?<select id="riderHotel"><option>No</option><option>Yes</option></select></label>
-        <label>Status<select id="riderStatus"><option>Requested</option><option>Confirmed</option><option>Completed</option><option>Canceled</option></select></label>
+        <label>Appointment
+          <select id="riderAppointment">
+            <option>Physical</option><option>ASVAB</option><option>Processing</option>
+            <option>Consult</option><option>Return</option><option>Other</option>
+          </select>
+        </label>
+        <label>Hotel needed?
+          <select id="riderHotel"><option>No</option><option>Yes</option></select>
+        </label>
+        <label>Status
+          <select id="riderStatus"><option>Requested</option><option>Confirmed</option><option>Completed</option><option>Canceled</option></select>
+        </label>
         <label class="span-2">Notes<textarea id="riderNotes" rows="2"></textarea></label>
-        <div class="form-actions span-2"><button type="button" id="cancelRider" class="button ghost">Cancel</button><button type="submit" class="button">Save rider</button></div>
+        <div class="form-actions span-2">
+          <button type="button" id="cancelRider" class="button ghost">Cancel</button>
+          <button type="submit" class="button">Save rider</button>
+        </div>
       </form>
+
       <div id="riderList" class="stack"></div>
-      <div id="emptyRiders" class="empty-state card"><strong>No riders assigned</strong><p>Add applicant IDs or initials to an existing trip.</p></div>
+      <div id="emptyRiders" class="empty-state card">
+        <strong>No riders assigned</strong>
+        <p>Add applicant IDs or initials to an existing trip.</p>
+      </div>
     </section>
 
     <section id="view-availability" class="view" aria-labelledby="availabilityTitle">
-      <div class="section-heading"><div><p class="eyebrow">DRIVER COVERAGE</p><h2 id="availabilityTitle">Availability</h2></div><button id="newAvailabilityBtn" class="button">+ Availability</button></div>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">DRIVER COVERAGE</p>
+          <h2 id="availabilityTitle">Availability</h2>
+        </div>
+        <button id="newAvailabilityBtn" class="button">+ Availability</button>
+      </div>
+
       <form id="availabilityForm" class="card form-grid hidden">
         <input id="availabilityId" type="hidden" />
         <label>Date<input id="availabilityDate" type="date" required /></label>
         <label>Team member<input id="availabilityMember" list="rosterOptions" required /></label>
-        <label>Status<select id="availabilityStatus"><option>Available</option><option>Preferred</option><option>Backup Only</option><option>Unavailable</option></select></label>
-        <label>Has vehicle?<select id="availabilityVehicle"><option>No</option><option>Yes</option></select></label>
+        <label>Status
+          <select id="availabilityStatus">
+            <option>Available</option><option>Preferred</option><option>Backup Only</option><option>Unavailable</option>
+          </select>
+        </label>
+        <label>Has vehicle?
+          <select id="availabilityVehicle"><option>No</option><option>Yes</option></select>
+        </label>
         <label>Seats<input id="availabilitySeats" type="number" min="0" max="20" inputmode="numeric" /></label>
         <label class="span-2">Notes<textarea id="availabilityNotes" rows="2"></textarea></label>
-        <div class="form-actions span-2"><button type="button" id="cancelAvailability" class="button ghost">Cancel</button><button type="submit" class="button">Save availability</button></div>
+        <div class="form-actions span-2">
+          <button type="button" id="cancelAvailability" class="button ghost">Cancel</button>
+          <button type="submit" class="button">Save availability</button>
+        </div>
       </form>
+
       <div id="availabilityList" class="stack"></div>
-      <div id="emptyAvailability" class="empty-state card"><strong>No availability entered</strong><p>Enter each team member’s availability before assigning trips.</p></div>
+      <div id="emptyAvailability" class="empty-state card">
+        <strong>No availability entered</strong>
+        <p>Enter each team member’s availability before assigning trips.</p>
+      </div>
     </section>
 
     <section id="view-settings" class="view" aria-labelledby="settingsTitle">
-      <div class="section-heading"><div><p class="eyebrow">APP SETTINGS</p><h2 id="settingsTitle">Team & sync</h2></div></div>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">APP SETTINGS</p>
+          <h2 id="settingsTitle">Team & sync</h2>
+        </div>
+      </div>
+
       <div class="card form-grid">
-        <label class="span-2">Local roster<textarea id="rosterInput" rows="5" placeholder="One name per line"></textarea></label>
+        <label class="span-2">Local roster
+          <textarea id="rosterInput" rows="5" placeholder="One name per line"></textarea>
+        </label>
         <button id="saveRoster" class="button span-2">Save roster</button>
       </div>
+
       <div class="card">
         <h3>Shared team board</h3>
         <p class="muted">The app works locally without setup. To share live data across phones, connect a Supabase project using the included SQL schema.</p>
         <div class="form-grid">
           <label class="span-2">Supabase URL<input id="supabaseUrl" placeholder="https://xxxx.supabase.co" /></label>
-          <label class="span-2">Supabase public key<input id="supabaseKey" type="password" /></label>
+          <label class="span-2">Supabase anon key<input id="supabaseKey" type="password" /></label>
           <button id="saveSupabase" class="button secondary span-2">Save connection</button>
         </div>
       </div>
+
       <div id="authCard" class="card">
-        <h3>Phone sign-in</h3>
-        <p class="muted">Enter a mobile number and verify the one-time code sent by SMS. New numbers create an account automatically.</p>
+        <h3>Email verification</h3>
+        <p class="muted">Enter your email address. We will send a secure verification link that signs you in and creates your account the first time.</p>
         <div class="form-grid">
-          <label class="span-2">Mobile number<input id="authPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(228) 555-0123" /></label>
-          <button id="sendPhoneOtp" class="button span-2">Text me a code</button>
-          <div id="otpFields" class="span-2 form-grid hidden">
-            <label class="span-2">6-digit code<input id="authOtp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="123456" /></label>
-            <button id="verifyPhoneOtp" class="button span-2">Verify and sign in</button>
-          </div>
+          <label class="span-2">Email address<input id="authEmail" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com" /></label>
+          <button id="sendEmailLink" class="button span-2">Send verification email</button>
           <button id="signOut" class="button danger span-2 hidden">Sign out</button>
         </div>
         <p id="authMessage" class="inline-message"></p>
       </div>
+
       <div id="teamCard" class="card">
         <h3>Create or join team</h3>
         <div class="form-grid">
@@ -147,8 +243,20 @@
         </div>
         <p id="teamMessage" class="inline-message"></p>
       </div>
-      <div class="card warning-card"><h3>Data protection</h3><p>Use applicant IDs or initials only. Do not enter SSNs, full birth dates, medical details, or other sensitive applicant information.</p></div>
-      <div class="card"><h3>Backup</h3><div class="button-row"><button id="exportData" class="button secondary">Export JSON</button><label class="button ghost file-button">Import JSON<input id="importData" type="file" accept="application/json" /></label><button id="clearLocalData" class="button danger">Clear local data</button></div></div>
+
+      <div class="card warning-card">
+        <h3>Data protection</h3>
+        <p>Use applicant IDs or initials only. Do not enter SSNs, full birth dates, medical details, or other sensitive applicant information.</p>
+      </div>
+
+      <div class="card">
+        <h3>Backup</h3>
+        <div class="button-row">
+          <button id="exportData" class="button secondary">Export JSON</button>
+          <label class="button ghost file-button">Import JSON<input id="importData" type="file" accept="application/json" /></label>
+          <button id="clearLocalData" class="button danger">Clear local data</button>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -161,15 +269,35 @@
   </nav>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
   <template id="tripCardTemplate">
     <article class="trip-card card">
-      <div class="trip-card-header"><div><p class="trip-date"></p><h3 class="trip-title"></h3></div><span class="pill trip-status"></span></div>
+      <div class="trip-card-header">
+        <div>
+          <p class="trip-date"></p>
+          <h3 class="trip-title"></h3>
+        </div>
+        <span class="pill trip-status"></span>
+      </div>
       <div class="trip-alert hidden"></div>
-      <dl class="trip-grid"><div><dt>Coordinator</dt><dd class="trip-primary"></dd></div><div><dt>Backup</dt><dd class="trip-backup"></dd></div><div><dt>Vehicle</dt><dd class="trip-vehicle"></dd></div><div><dt>Departure</dt><dd class="trip-time"></dd></div></dl>
-      <div class="seat-meter"><div class="seat-text"></div><div class="meter"><span></span></div></div>
-      <div class="trip-actions"><button class="button ghost edit-trip">Edit</button><button class="button secondary add-rider">Add rider</button><button class="button danger delete-trip">Delete</button></div>
+      <dl class="trip-grid">
+        <div><dt>Coordinator</dt><dd class="trip-primary"></dd></div>
+        <div><dt>Backup</dt><dd class="trip-backup"></dd></div>
+        <div><dt>Vehicle</dt><dd class="trip-vehicle"></dd></div>
+        <div><dt>Departure</dt><dd class="trip-time"></dd></div>
+      </dl>
+      <div class="seat-meter">
+        <div class="seat-text"></div>
+        <div class="meter"><span></span></div>
+      </div>
+      <div class="trip-actions">
+        <button class="button ghost edit-trip">Edit</button>
+        <button class="button secondary add-rider">Add rider</button>
+        <button class="button danger delete-trip">Delete</button>
+      </div>
     </article>
   </template>
+
   <script src="app.js" defer></script>
 </body>
 </html>
