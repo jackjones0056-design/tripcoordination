@@ -1,9 +1,12 @@
-const CACHE_NAME = "meps-coordinator-v1";
+const CACHE_NAME = "meps-coordinator-v2";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
+  "./app-core.js",
+  "./app-sync.js",
+  "./app-main.js",
   "./manifest.webmanifest",
   "./icons/icon.svg"
 ];
