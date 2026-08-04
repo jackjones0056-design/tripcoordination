@@ -78,9 +78,11 @@
     $("rosterOptions").innerHTML = state.roster.map(n => `<option value="${esc(n)}"></option>`).join("");
     $("supabaseUrl").value = config.url || ""; $("supabaseKey").value = config.anonKey || "";
     const signed = !!session?.access_token;
-    $("signOut").classList.toggle("hidden", !signed); $("sendPhoneOtp").classList.toggle("hidden", signed); $("authPhone").disabled = signed;
-    $("otpFields").classList.toggle("hidden", signed || !sessionStorage.getItem("meps-pending-phone"));
-    $("authMessage").textContent = signed ? `Signed in as ${session.user?.phone || "authorized user"}.` : "";
+    const pendingEmail = sessionStorage.getItem("meps-pending-email");
+    $("signOut").classList.toggle("hidden", !signed); $("sendEmailLink").classList.toggle("hidden", signed); $("authEmail").disabled = signed;
+    $("authMessage").textContent = signed
+      ? `Signed in as ${session.user?.email || "authorized user"}.`
+      : pendingEmail ? `Verification email sent to ${pendingEmail}. Open the link on this device.` : "";
     $("syncBadge").textContent = state.team && signed ? "Synced" : config.url ? "Ready" : "Local";
     $("syncBadge").className = `status-badge ${state.team && signed ? "online" : "offline"}`;
     $("teamMessage").textContent = state.team ? `Team: ${state.team.name} • Join code: ${state.team.join_code || "hidden"}` : "";
