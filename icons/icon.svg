@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="MEPS Trip Coordinator">
+  <rect width="512" height="512" rx="112" fill="#15395f"/>
+  <rect x="62" y="62" width="388" height="388" rx="82" fill="#ffffff"/>
+  <path d="M142 254h228" stroke="#15395f" stroke-width="24" stroke-linecap="round"/>
+  <circle cx="144" cy="254" r="38" fill="#15395f"/>
+  <circle cx="368" cy="254" r="38" fill="#15395f"/>
+  <rect x="158" y="166" width="196" height="102" rx="30" fill="#dceaf7" stroke="#15395f" stroke-width="14"/>
+  <text x="256" y="370" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="68" font-weight="700" fill="#15395f">MEPS</text>
+</svg>
