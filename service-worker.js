@@ -1,8 +1,9 @@
-const CACHE_NAME = "meps-coordinator-v3";
+const CACHE_NAME = "meps-coordinator-ios-v1";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./styles.css",
+  "./ios-overrides.css",
   "./app.js",
   "./app-core.js",
   "./app-sync.js",
