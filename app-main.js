@@ -8,12 +8,12 @@
   $("newAvailabilityBtn").onclick=()=>openAvailability(); $("cancelAvailability").onclick=()=>$("availabilityForm").classList.add("hidden");
   $("saveRoster").onclick=()=>{state.roster=$("rosterInput").value.split(/\n|,/).map(x=>x.trim()).filter(Boolean);save();toast("Roster saved")};
   $("saveSupabase").onclick=()=>{config={url:$("supabaseUrl").value.trim(),anonKey:$("supabaseKey").value.trim()};localStorage.setItem(CONFIG,JSON.stringify(config));renderSettings();toast("Connection saved")};
-  $("sendPhoneOtp").onclick=sendOtp; $("verifyPhoneOtp").onclick=verifyOtp; $("signOut").onclick=signOut; $("createTeam").onclick=createTeam; $("joinTeam").onclick=joinTeam;
+  $("sendEmailLink").onclick=sendEmailLink; $("signOut").onclick=signOut; $("createTeam").onclick=createTeam; $("joinTeam").onclick=joinTeam;
   $("exportData").onclick=()=>{const u=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:"application/json"})),a=document.createElement("a");a.href=u;a.download=`meps-backup-${today()}.json`;a.click();URL.revokeObjectURL(u)};
   $("importData").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.trips)||!Array.isArray(d.riders))throw 0;state={...empty(),...d};save();toast("Backup imported")}catch{toast("Invalid backup file")}};r.readAsText(f)};
   $("clearLocalData").onclick=()=>{if(confirm("Clear all local data?")){state=empty();save();toast("Local data cleared")}};
   addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e;$("installBtn").classList.remove("hidden")}); $("installBtn").onclick=async()=>{if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;$("installBtn").classList.add("hidden")}};
   addEventListener("online",()=>ready()?loadRemote():renderSettings()); addEventListener("offline",renderSettings);
   if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js"));
-  if(session?.access_token)fetchUser().then(resolveTeam); setInterval(()=>{if(document.visibilityState==="visible"&&ready()&&navigator.onLine)loadRemote()},30000);
+  const capturedSession=captureEmailSession(); if(capturedSession||session?.access_token)fetchUser().then(resolveTeam); setInterval(()=>{if(document.visibilityState==="visible"&&ready()&&navigator.onLine)loadRemote()},30000);
   resetTrip(); $("availabilityDate").value=today(); render();
