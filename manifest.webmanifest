@@ -3,9 +3,10 @@
   "short_name": "MEPS Trips",
   "description": "Coordinate MEPS trips, drivers, riders, seats, and availability.",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f7fa",
-  "theme_color": "#15395f",
+  "background_color": "#f2f2f7",
+  "theme_color": "#f2f2f7",
   "orientation": "portrait-primary",
   "icons": [
     {
