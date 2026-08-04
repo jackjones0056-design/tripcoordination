@@ -1,5 +1,5 @@
 (() => {
-  const APP_VERSION = "ios-20260804-5";
+  const APP_VERSION = "ios-20260804-6";
   const configKey = "meps-config-v1";
   const defaults = {
     url: "https://blycesggrrjzeubkxdaw.supabase.co",
