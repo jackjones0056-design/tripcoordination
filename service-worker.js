@@ -1,13 +1,13 @@
-const CACHE_NAME = "meps-coordinator-ios-v2";
+const CACHE_NAME = "meps-coordinator-ios-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./styles.css",
-  "./ios-overrides.css",
+  "./ios-overrides.css?v=ios-20260804-3",
   "./app.js",
-  "./app-core.js",
-  "./app-sync.js",
-  "./app-main.js",
+  "./app-core.js?v=ios-20260804-3",
+  "./app-sync.js?v=ios-20260804-3",
+  "./app-main.js?v=ios-20260804-3",
   "./manifest.webmanifest",
   "./icons/icon.svg"
 ];
@@ -17,24 +17,45 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
+});
+
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
-    )
+    ).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  const requestUrl = new URL(event.request.url);
+  const isNavigation = event.request.mode === "navigate";
+
+  if (isNavigation) {
+    event.respondWith(
+      fetch(event.request, { cache: "no-store" })
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put("./index.html", copy));
+          return response;
+        })
+        .catch(() => caches.match("./index.html"))
+    );
+    return;
+  }
+
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        if (response.ok && requestUrl.origin === self.location.origin) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        }
         return response;
       })
-      .catch(() => caches.match(event.request).then((cached) => cached || caches.match("./index.html")))
+      .catch(() => caches.match(event.request))
   );
 });
