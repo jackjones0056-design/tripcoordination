@@ -8,12 +8,13 @@
   $("newAvailabilityBtn").onclick=()=>openAvailability(); $("cancelAvailability").onclick=()=>$("availabilityForm").classList.add("hidden");
   $("saveRoster").onclick=()=>{state.roster=$("rosterInput").value.split(/\n|,/).map(x=>x.trim()).filter(Boolean);save();toast("Roster saved")};
   $("saveSupabase").onclick=()=>{config={url:$("supabaseUrl").value.trim(),anonKey:$("supabaseKey").value.trim()};localStorage.setItem(CONFIG,JSON.stringify(config));renderSettings();toast("Connection saved")};
-  $("sendEmailLink").onclick=sendEmailLink; $("signOut").onclick=signOut; $("createTeam").onclick=createTeam; $("joinTeam").onclick=joinTeam;
+  $("createTeam").onclick=async()=>{try{await ensureAnonymousSession();await createTeam();}catch{toast("Could not connect this device")}};
+  $("joinTeam").onclick=async()=>{try{await ensureAnonymousSession();await joinTeam();}catch{toast("Could not connect this device")}};
   $("exportData").onclick=()=>{const u=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:"application/json"})),a=document.createElement("a");a.href=u;a.download=`meps-backup-${today()}.json`;a.click();URL.revokeObjectURL(u)};
   $("importData").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.trips)||!Array.isArray(d.riders))throw 0;state={...empty(),...d};save();toast("Backup imported")}catch{toast("Invalid backup file")}};r.readAsText(f)};
   $("clearLocalData").onclick=()=>{if(confirm("Clear all local data?")){state=empty();save();toast("Local data cleared")}};
   addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e;$("installBtn").classList.remove("hidden")}); $("installBtn").onclick=async()=>{if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;$("installBtn").classList.add("hidden")}};
-  addEventListener("online",()=>ready()?loadRemote():renderSettings()); addEventListener("offline",renderSettings);
+  addEventListener("online",()=>ready()?loadRemote():ensureAnonymousSession().catch(()=>{})); addEventListener("offline",renderSettings);
 
   if("serviceWorker" in navigator){
     let reloading=false;
@@ -24,7 +25,7 @@
     });
     addEventListener("load",async()=>{
       try{
-        const registration=await navigator.serviceWorker.register("./service-worker.js?v=ios-20260804-3",{updateViaCache:"none"});
+        const registration=await navigator.serviceWorker.register("./service-worker.js?v=ios-20260804-5",{updateViaCache:"none"});
         await registration.update();
         if(registration.waiting)registration.waiting.postMessage({type:"SKIP_WAITING"});
         registration.addEventListener("updatefound",()=>{
@@ -38,5 +39,12 @@
     });
   }
 
-  const capturedSession=captureEmailSession(); if(capturedSession||session?.access_token)fetchUser().then(resolveTeam); setInterval(()=>{if(document.visibilityState==="visible"&&ready()&&navigator.onLine)loadRemote()},30000);
+  (async()=>{
+    const capturedSession=captureEmailSession();
+    try{
+      if(capturedSession||session?.access_token){await fetchUser();await resolveTeam();}
+      else {await ensureAnonymousSession();await fetchUser();await resolveTeam();}
+    }catch(error){console.error(error);}
+  })();
+  setInterval(()=>{if(document.visibilityState==="visible"&&ready()&&navigator.onLine)loadRemote()},30000);
   resetTrip(); $("availabilityDate").value=today(); render();
