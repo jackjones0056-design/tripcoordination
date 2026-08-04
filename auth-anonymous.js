@@ -4,9 +4,13 @@ async function ensureAnonymousSession() {
   if (session?.access_token) return session;
   if (!config.url || !config.anonKey) throw new Error("Supabase is not configured");
 
+  const message = document.getElementById("teamMessage");
+  if (message) message.textContent = "Connecting this device…";
+
   try {
     const response = await fetch(`${config.url.replace(/\/$/, "")}/auth/v1/signup`, {
       method: "POST",
+      cache: "no-store",
       headers: {
         apikey: config.anonKey,
         Authorization: `Bearer ${config.anonKey}`,
@@ -15,9 +19,15 @@ async function ensureAnonymousSession() {
       body: JSON.stringify({ data: { device_type: "meps-pwa" } })
     });
 
-    if (!response.ok) throw new Error(await response.text() || "Anonymous sign-in failed");
-    const data = await response.json();
-    if (!data?.access_token) throw new Error("Anonymous sign-in did not return a session");
+    const raw = await response.text();
+    let data = {};
+    try { data = raw ? JSON.parse(raw) : {}; } catch { data = {}; }
+
+    if (!response.ok) {
+      const detail = data?.msg || data?.message || data?.error_description || raw || `HTTP ${response.status}`;
+      throw new Error(detail);
+    }
+    if (!data?.access_token) throw new Error("Supabase did not return an anonymous session");
 
     session = {
       access_token: data.access_token,
@@ -26,11 +36,13 @@ async function ensureAnonymousSession() {
       user: data.user || null
     };
     localStorage.setItem(SESSION, JSON.stringify(session));
+    if (message) message.textContent = "Device connected. Create or join a team.";
+    renderSettings();
     return session;
   } catch (error) {
     console.error("Anonymous session failed", error);
-    const message = document.getElementById("teamMessage");
-    if (message) message.textContent = "Shared sync is not active yet. Enable Anonymous Sign-Ins in Supabase, then reopen the app.";
+    const detail = String(error?.message || error || "Unknown authentication error");
+    if (message) message.textContent = `Device connection failed: ${detail}`;
     throw error;
   }
 }
