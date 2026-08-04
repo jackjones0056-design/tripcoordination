@@ -10,7 +10,7 @@ A mobile-first, installable web app for coordinating MEPS trips across a team.
 - Automatic conflict warnings
 - Offline/local mode
 - Installable PWA manifest and service worker
-- Optional shared Supabase backend with phone-number SMS OTP sign-in and row-level security
+- Optional shared Supabase backend with email magic-link verification and row-level security
 - JSON export/import for backup
 
 ## Local preview
@@ -35,13 +35,12 @@ This is a static app. Deploy the folder to GitHub Pages, Netlify, Vercel, Cloudf
 
 1. Create a Supabase project.
 2. Run `supabase-schema.sql` in the Supabase SQL editor.
-3. In Supabase Authentication > Providers, enable Phone.
-4. Configure an SMS provider such as Twilio, Twilio Verify, MessageBird, or Vonage.
-5. Configure Auth rate limits and CAPTCHA before production use to prevent SMS abuse.
-6. Open the PWA's Settings tab and paste the project URL and public/publishable key.
-7. Sign in with a phone number and the SMS verification code.
-8. One person creates the team and shares the join code.
-9. Other authorized users sign in and join using that code.
+3. In Supabase Authentication > Providers, make sure Email is enabled.
+4. Set the Site URL and allowed redirect URL to the deployed PWA URL.
+5. Open the PWA's Settings tab and confirm the project URL and public/publishable key.
+6. Enter an email address and open the verification link on the same device.
+7. One person creates the team and shares the join code.
+8. Other authorized users verify their email and join using that code.
 
 ## Privacy
 
