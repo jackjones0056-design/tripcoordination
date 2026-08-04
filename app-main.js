@@ -25,7 +25,7 @@
     });
     addEventListener("load",async()=>{
       try{
-        const registration=await navigator.serviceWorker.register("./service-worker.js?v=ios-20260804-5",{updateViaCache:"none"});
+        const registration=await navigator.serviceWorker.register("./service-worker.js?v=ios-20260804-6",{updateViaCache:"none"});
         await registration.update();
         if(registration.waiting)registration.waiting.postMessage({type:"SKIP_WAITING"});
         registration.addEventListener("updatefound",()=>{
