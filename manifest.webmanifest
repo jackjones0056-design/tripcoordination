@@ -1,0 +1,18 @@
+{
+  "name": "MEPS Trip Coordinator",
+  "short_name": "MEPS Trips",
+  "description": "Coordinate MEPS trips, drivers, riders, seats, and availability.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4f7fa",
+  "theme_color": "#15395f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
