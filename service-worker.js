@@ -1,4 +1,4 @@
-const CACHE_NAME = "meps-coordinator-ios-v1";
+const CACHE_NAME = "meps-coordinator-ios-v2";
 const APP_SHELL = [
   "./",
   "./index.html",
