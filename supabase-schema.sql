@@ -24,7 +24,7 @@ create table if not exists public.trips (
   id uuid primary key,
   team_id uuid not null references public.teams(id) on delete cascade,
   date date not null,
-  window text not null,
+  "window" text not null,
   meps_location text not null,
   pickup_area text not null,
   departure_time text,
@@ -179,3 +179,4 @@ revoke all on function public.is_team_member(uuid) from public, anon;
 
 grant execute on function public.create_team(text, text) to authenticated;
 grant execute on function public.join_team(text, text) to authenticated;
+grant execute on function public.is_team_member(uuid) to authenticated;
