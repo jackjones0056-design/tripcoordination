@@ -1,0 +1,23 @@
+.button.ghost {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.pill.Requested,
+.pill.BackupOnly {
+  color: var(--orange);
+  background: var(--orange-bg);
+}
+
+.pill.Completed,
+.pill.Available,
+.pill.Preferred {
+  color: var(--green);
+  background: var(--green-bg);
+}
+
+input[type="date"],
+input[type="time"],
+input[type="number"] {
+  text-align: right;
+}
