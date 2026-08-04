@@ -1,4 +1,5 @@
 (() => {
+  const APP_VERSION = "ios-20260804-3";
   const configKey = "meps-config-v1";
   const defaults = {
     url: "https://blycesggrrjzeubkxdaw.supabase.co",
@@ -20,13 +21,13 @@
 
   const style = document.createElement("link");
   style.rel = "stylesheet";
-  style.href = "ios-overrides.css";
+  style.href = `ios-overrides.css?v=${APP_VERSION}`;
   document.head.appendChild(style);
 
   const files = ["app-core.js", "app-sync.js", "app-main.js"];
   const load = (src) => new Promise((resolve, reject) => {
     const script = document.createElement("script");
-    script.src = src;
+    script.src = `${src}?v=${APP_VERSION}`;
     script.onload = resolve;
     script.onerror = () => reject(new Error(`Could not load ${src}`));
     document.head.appendChild(script);
