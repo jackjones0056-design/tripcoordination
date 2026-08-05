@@ -1,14 +1,14 @@
-const CACHE_NAME = "meps-coordinator-ios-v6";
+const CACHE_NAME = "meps-coordinator-ios-v7";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./styles.css",
-  "./ios-overrides.css?v=ios-20260804-6",
+  "./ios-overrides.css?v=ios-20260804-7",
   "./app.js",
-  "./app-core.js?v=ios-20260804-6",
-  "./app-sync.js?v=ios-20260804-6",
-  "./auth-anonymous.js?v=ios-20260804-6",
-  "./app-main.js?v=ios-20260804-6",
+  "./app-core.js?v=ios-20260804-7",
+  "./app-sync.js?v=ios-20260804-7",
+  "./pin-ui.js?v=ios-20260804-7",
+  "./app-main.js?v=ios-20260804-7",
   "./manifest.webmanifest",
   "./icons/icon.svg"
 ];
@@ -49,7 +49,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   event.respondWith(
-    fetch(event.request)
+    fetch(event.request, { cache: "no-store" })
       .then((response) => {
         if (response.ok && requestUrl.origin === self.location.origin) {
           const copy = response.clone();
