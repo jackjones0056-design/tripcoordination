@@ -1,5 +1,5 @@
 (() => {
-  const APP_VERSION = "ios-20260804-6";
+  const APP_VERSION = "ios-20260804-7";
   const configKey = "meps-config-v1";
   const defaults = {
     url: "https://blycesggrrjzeubkxdaw.supabase.co",
@@ -24,7 +24,7 @@
   style.href = `ios-overrides.css?v=${APP_VERSION}`;
   document.head.appendChild(style);
 
-  const files = ["app-core.js", "app-sync.js", "auth-anonymous.js", "app-main.js"];
+  const files = ["app-core.js", "app-sync.js", "pin-ui.js", "app-main.js"];
   const load = (src) => new Promise((resolve, reject) => {
     const script = document.createElement("script");
     script.src = `${src}?v=${APP_VERSION}`;
